@@ -1,0 +1,41 @@
+# Mis 5 servidores Ubuntu para la Práctica 8 de Electiva 2 (DevOps)
+# Todos se construyen con mi Dockerfile y cada uno tiene su propio puerto SSH
+# Uso los puertos 2201 al 2205 porque el 2222 ya lo usa Codespaces
+
+services:
+
+  servidor1:
+    build: .
+    container_name: servidor1
+    hostname: servidor1
+    # El puerto 2201 de afuera se conecta con el SSH (puerto 22) de este servidor
+    ports:
+      - "2201:22"
+
+  servidor2:
+    build: .
+    container_name: servidor2
+    hostname: servidor2
+    ports:
+      - "2202:22"
+
+  servidor3:
+    build: .
+    container_name: servidor3
+    hostname: servidor3
+    ports:
+      - "2203:22"
+
+  servidor4:
+    build: .
+    container_name: servidor4
+    hostname: servidor4
+    ports:
+      - "2204:22"
+
+  servidor5:
+    build: .
+    container_name: servidor5
+    hostname: servidor5
+    ports:
+      - "2205:22"

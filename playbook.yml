@@ -1,0 +1,44 @@
+# Mi playbook para la Práctica 8 de Electiva 2 (DevOps)
+# Hace las mismas tareas en los 5 servidores a la vez
+
+- name: Automatizar mis 5 servidores Ubuntu
+  hosts: servidores
+  # become es como poner "sudo": las tareas se hacen como administrador
+  become: true
+
+  tasks:
+
+    # 1. Actualizar la lista de programas disponibles
+    - name: Actualizar la caché de APT
+      ansible.builtin.apt:
+        update_cache: true
+
+    # 2. Crear el usuario itla, con su carpeta personal
+    - name: Crear el usuario itla
+      ansible.builtin.user:
+        name: itla
+        shell: /bin/bash
+        create_home: true
+
+    # 3. Crear la carpeta app
+    - name: Crear la carpeta app
+      ansible.builtin.file:
+        path: /app
+        state: directory
+        mode: "0755"
+
+    # 4. Crear el archivo hola.txt dentro de app
+    # {{ inventory_hostname }} se cambia solito por el nombre de cada servidor
+    - name: Crear el archivo hola.txt
+      ansible.builtin.copy:
+        dest: /app/hola.txt
+        content: "Hola desde {{ inventory_hostname }}. Este archivo lo creó Ansible por Nicky.\n"
+        mode: "0644"
+
+    # 5. Instalar cowsay y htop
+    - name: Instalar cowsay y htop
+      ansible.builtin.apt:
+        name:
+          - cowsay
+          - htop
+        state: present

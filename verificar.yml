@@ -1,0 +1,41 @@
+# Mi playbook de verificación (el extra de la Práctica 8)
+# Comprueba en los 5 servidores que todo lo del playbook.yml quedó bien
+# Solo lee cosas, no cambia nada, por eso todas las tareas tienen changed_when: false
+
+- name: Verificar que mis 5 servidores quedaron listos
+  hosts: servidores
+
+  tasks:
+
+    # Reviso que el usuario itla exista
+    - name: Revisar el usuario itla
+      ansible.builtin.command: id itla
+      register: usuario
+      changed_when: false
+
+    # Leo lo que dice el hola.txt
+    - name: Leer el archivo hola.txt
+      ansible.builtin.command: cat /app/hola.txt
+      register: hola
+      changed_when: false
+
+    # Reviso que htop esté instalado y le pregunto su versión
+    - name: Revisar htop
+      ansible.builtin.command: htop --version
+      register: htop
+      changed_when: false
+
+    # Pongo a la vaquita de cowsay a saludar desde cada servidor
+    - name: Saludo con cowsay
+      ansible.builtin.command: /usr/games/cowsay "Hola desde {{ inventory_hostname }}"
+      register: vaquita
+      changed_when: false
+
+    # Muestro todo junto en pantalla
+    - name: Mostrar el resultado
+      ansible.builtin.debug:
+        msg:
+          - "Usuario: {{ usuario.stdout }}"
+          - "hola.txt: {{ hola.stdout }}"
+          - "htop: {{ htop.stdout_lines[0] }}"
+          - "{{ vaquita.stdout_lines }}"
